@@ -7,7 +7,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model User {
@@ -22,10 +23,10 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   // Relations
-  equipment       Equipment[]
-  rentals        Rental[]     @relation("Renter")
-  ownedRentals   Rental[]     @relation("Owner")
-  reviews        Review[]
+  equipment     Equipment[]  // Equipment listed by this user
+  rentals       Rental[]     @relation("Renter")  // Rentals where user is the renter
+  ownedRentals  Rental[]     @relation("Owner")   // Rentals where user is the owner
+  reviews       Review[]     // Reviews written by this user
   sentMessages    Message[]    @relation("MessageSender")
   receivedMessages Message[]   @relation("MessageReceiver")
 
@@ -35,12 +36,12 @@ model User {
 
 model Equipment {
   id          String   @id @default(cuid())
-  title       String
-  description String
+  name        String
+  description String?
+  price       Float    // Daily rental rate
   category    String
-  dailyRate   Float
-  condition   String
-  images      String[]
+  location    String
+  image       String?
   available   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -53,38 +54,39 @@ model Equipment {
 }
 
 model Rental {
-  id         String   @id @default(cuid())
+  id         String      @id @default(cuid())
   startDate  DateTime
   endDate    DateTime
   totalPrice Float
   status     RentalStatus @default(PENDING)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   // Relations
-  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  equipment   Equipment  @relation(fields: [equipmentId], references: [id])
   equipmentId String
-  renter     User     @relation("Renter", fields: [renterId], references: [id])
+  renter     User       @relation("Renter", fields: [renterId], references: [id])
   renterId   String
-  owner      User     @relation("Owner", fields: [ownerId], references: [id])
+  owner      User       @relation("Owner", fields: [ownerId], references: [id])
   ownerId    String
   review     Review?
   messages   Message[]
 }
 
 model Review {
-  id        String   @id @default(cuid())
-  rating    Int
-  comment   String?
-  createdAt DateTime @default(now())
+  id          String    @id @default(cuid())
+  rating      Int
+  comment     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   // Relations
   equipment   Equipment @relation(fields: [equipmentId], references: [id])
   equipmentId String
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  rental     Rental   @relation(fields: [rentalId], references: [id])
-  rentalId   String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  rental      Rental   @relation(fields: [rentalId], references: [id])
+  rentalId    String   @unique
 }
 
 model Message {
@@ -146,7 +148,6 @@ enum RentalStatus {
   PENDING
   APPROVED
   REJECTED
-  ACTIVE
   COMPLETED
   CANCELLED
 } 
