@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  equipment       Equipment[]
+  rentals        Rental[]     @relation("Renter")
+  ownedRentals   Rental[]     @relation("Owner")
+  reviews        Review[]
+  sentMessages    Message[]    @relation("MessageSender")
+  receivedMessages Message[]   @relation("MessageReceiver")
+
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Equipment {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    String
+  dailyRate   Float
+  condition   String
+  images      String[]
+  available   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  owner       User     @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  rentals     Rental[]
+  reviews     Review[]
+}
+
+model Rental {
+  id         String   @id @default(cuid())
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Float
+  status     RentalStatus @default(PENDING)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  equipmentId String
+  renter     User     @relation("Renter", fields: [renterId], references: [id])
+  renterId   String
+  owner      User     @relation("Owner", fields: [ownerId], references: [id])
+  ownerId    String
+  review     Review?
+  messages   Message[]
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  // Relations
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  equipmentId String
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  rental     Rental   @relation(fields: [rentalId], references: [id])
+  rentalId   String   @unique
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  // Relations
+  sender     User     @relation("MessageSender", fields: [senderId], references: [id])
+  senderId   String
+  receiver   User     @relation("MessageReceiver", fields: [receiverId], references: [id])
+  receiverId String
+  rental     Rental   @relation(fields: [rentalId], references: [id])
+  rentalId   String
+}
+
+// NextAuth.js Models
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum RentalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+} 
