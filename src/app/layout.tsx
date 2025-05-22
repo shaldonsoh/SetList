@@ -11,11 +11,12 @@ import { MessageProvider } from '@/context/MessageContext'
 
 const inter = Inter({
   subsets: ['latin'],
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: "SetList",
-  description: "The film and production gear rental platform",
+  title: "Film Gear P2P",
+  description: "Rent and lend film gear",
 }
 
 export default function RootLayout({
@@ -24,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className={inter.className}>
+      <body>
         <ListingsProvider>
           <ReviewsProvider>
             <SearchProvider>
