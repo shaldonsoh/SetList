@@ -76,7 +76,7 @@ export default function ListGear() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Get current userId and stored listings to determine next ID
+    // Get current userId
     const userId = localStorage.getItem('userId');
     console.log('Current userId:', userId);
 
@@ -87,51 +87,28 @@ export default function ListGear() {
     }
 
     try {
-      // Get existing listings
-      const storedListings = localStorage.getItem(`userListings_${userId}`);
-      console.log('Current stored listings:', storedListings);
-      
-      let currentListings = [];
-      try {
-        currentListings = storedListings ? JSON.parse(storedListings) : [];
-      } catch (error) {
-        console.error('Error parsing existing listings:', error);
-      }
-
-      // Generate a predictable ID based on the number of existing listings
-      const nextId = (currentListings.length + 7).toString(); // Start from 7 since mock data uses 1-6
-
-      // Create a new listing with the predictable ID
+      // Create a new listing
       const newListing = {
-        id: nextId,
+        id: Date.now().toString(), // Use timestamp as ID
         name: formData.title,
         category: formData.category,
         description: formData.description,
         price: formData.dailyRate,
         location: formData.location,
         image: images[0] || 'https://images.unsplash.com/photo-1589872307379-0ffdf9829123', // Use first image or default
+        ownerId: userId
       };
 
       console.log('Creating new listing:', newListing);
 
-      // Add new listing and save back to localStorage
-      const updatedListings = [...currentListings, newListing];
-      console.log('Saving updated listings:', updatedListings);
-      
-      localStorage.setItem(`userListings_${userId}`, JSON.stringify(updatedListings));
-      
-      // Verify the save was successful
-      const verifyListings = localStorage.getItem(`userListings_${userId}`);
-      console.log('Verified saved listings:', verifyListings);
-
-      // Add to context
+      // Add to context (which handles localStorage)
       addListing(newListing);
 
       // Show success message
       alert('Equipment listed successfully!');
 
-      // Force a full page reload to the listings page
-      window.location.href = '/listings';
+      // Navigate to listings page
+      router.push('/listings');
     } catch (error) {
       console.error('Error saving listing:', error);
       alert('Error saving listing. Please try again.');

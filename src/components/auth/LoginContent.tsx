@@ -52,12 +52,12 @@ export default function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link href="/" className="flex justify-center">
-          <span className="text-2xl font-bold text-black">Set<span className="text-amber-600">List</span></span>
+          <span className="text-2xl font-bold text-white">Set<span className="text-yellow-400">List</span></span>
         </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
           {isLogin ? 'Sign in to your account' : 'Create your account'}
         </h2>
         <div className="mt-2 text-center">
@@ -66,7 +66,7 @@ export default function LoginContent() {
               const newMode = isLogin ? 'signup' : 'login';
               router.push(`/auth/login${newMode === 'signup' ? '?mode=signup' : ''}`);
             }}
-            className="font-medium text-amber-600 hover:text-amber-500"
+            className="font-medium text-yellow-400 hover:text-yellow-300"
           >
             {isLogin ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
           </button>
@@ -74,11 +74,11 @@ export default function LoginContent() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-gray-900 py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {!isLogin && (
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="block text-sm font-medium text-white">
                   Full Name
                 </label>
                 <div className="mt-1">
@@ -90,14 +90,14 @@ export default function LoginContent() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+                    className="appearance-none block w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-400 focus:border-yellow-400 sm:text-sm"
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-white">
                 Email address
               </label>
               <div className="mt-1">
@@ -109,13 +109,13 @@ export default function LoginContent() {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-400 focus:border-yellow-400 sm:text-sm"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-white">
                 Password
               </label>
               <div className="mt-1">
@@ -127,14 +127,14 @@ export default function LoginContent() {
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-400 focus:border-yellow-400 sm:text-sm"
                 />
               </div>
             </div>
 
             {!isLogin && (
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-white">
                   Confirm Password
                 </label>
                 <div className="mt-1">
@@ -146,7 +146,7 @@ export default function LoginContent() {
                     required
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+                    className="appearance-none block w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-400 focus:border-yellow-400 sm:text-sm"
                   />
                 </div>
               </div>
@@ -161,15 +161,15 @@ export default function LoginContent() {
                     type="checkbox"
                     checked={formData.rememberMe}
                     onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
-                    className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-yellow-400 focus:ring-yellow-400 border-gray-700 rounded bg-gray-800"
                   />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-white">
                     Remember me
                   </label>
                 </div>
 
                 <div className="text-sm">
-                  <Link href="/auth/forgot-password" className="font-medium text-amber-600 hover:text-amber-500">
+                  <Link href="/auth/forgot-password" className="font-medium text-yellow-400 hover:text-yellow-300">
                     Forgot your password?
                   </Link>
                 </div>
@@ -179,7 +179,7 @@ export default function LoginContent() {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-yellow-400 hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400"
               >
                 {isLogin ? 'Sign in' : 'Create Account'}
               </button>

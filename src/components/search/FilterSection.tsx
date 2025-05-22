@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Sliders } from 'lucide-react';
+import { useSearch } from '@/context/SearchContext';
 
 const filterChips = [
   { id: 'available-now', label: 'Available Now' },
@@ -43,25 +44,11 @@ export default function FilterSection() {
   };
 
   return (
-    <div className="w-full max-w-3xl space-y-4">
+    <div className="w-full">
       <div className="flex flex-wrap gap-2">
-        {filterChips.map(filter => (
-          <button
-            key={filter.id}
-            onClick={() => toggleFilter(filter.id)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors
-              ${activeFilters.includes(filter.id)
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-              }`}
-          >
-            {filter.label}
-          </button>
-        ))}
-        
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 flex items-center gap-2"
+          className="px-4 py-2 rounded-full text-sm font-medium bg-gray-800 text-white hover:bg-gray-700 flex items-center gap-2"
         >
           <Sliders className="w-4 h-4" />
           More Filters
@@ -69,10 +56,10 @@ export default function FilterSection() {
       </div>
 
       {showAdvanced && (
-        <div className="p-4 bg-white border border-gray-300 rounded-lg shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="mt-4 p-4 bg-gray-800 border border-gray-700 rounded-lg shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Price Range Section */}
           <div>
-            <h3 className="font-medium text-gray-900 mb-3">Price Range</h3>
+            <h3 className="font-medium text-white mb-3">Price Range</h3>
             <div className="space-y-2">
               {priceRanges.map(range => (
                 <label key={range.id} className="flex items-center">
@@ -80,9 +67,9 @@ export default function FilterSection() {
                     type="checkbox"
                     checked={activeFilters.includes(range.id)}
                     onChange={() => toggleFilter(range.id)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-yellow-400 focus:ring-yellow-400 border-gray-600 rounded"
                   />
-                  <span className="ml-2 text-gray-700">{range.label}</span>
+                  <span className="ml-2 text-gray-300">{range.label}</span>
                 </label>
               ))}
             </div>
@@ -90,7 +77,7 @@ export default function FilterSection() {
 
           {/* Distance Range Section */}
           <div>
-            <h3 className="font-medium text-gray-900 mb-3">Distance</h3>
+            <h3 className="font-medium text-white mb-3">Distance</h3>
             <div className="space-y-2">
               {distanceRanges.map(range => (
                 <label key={range.id} className="flex items-center">
@@ -106,9 +93,9 @@ export default function FilterSection() {
                           .concat(range.id)
                       );
                     }}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    className="h-4 w-4 text-yellow-400 focus:ring-yellow-400 border-gray-600"
                   />
-                  <span className="ml-2 text-gray-700">{range.label}</span>
+                  <span className="ml-2 text-gray-300">{range.label}</span>
                 </label>
               ))}
             </div>
@@ -116,7 +103,7 @@ export default function FilterSection() {
 
           {/* Delivery Options Section */}
           <div>
-            <h3 className="font-medium text-gray-900 mb-3">Delivery Options</h3>
+            <h3 className="font-medium text-white mb-3">Delivery Options</h3>
             <div className="space-y-2">
               {deliveryOptions.map(option => (
                 <label key={option.id} className="flex items-center">
@@ -124,9 +111,9 @@ export default function FilterSection() {
                     type="checkbox"
                     checked={activeFilters.includes(option.id)}
                     onChange={() => toggleFilter(option.id)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-yellow-400 focus:ring-yellow-400 border-gray-600 rounded"
                   />
-                  <span className="ml-2 text-gray-700">{option.label}</span>
+                  <span className="ml-2 text-gray-300">{option.label}</span>
                 </label>
               ))}
             </div>

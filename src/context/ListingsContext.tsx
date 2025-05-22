@@ -28,12 +28,25 @@ export function ListingsProvider({ children }: { children: ReactNode }) {
       const listingKeys = keys.filter(key => key.startsWith('userListings_'));
       console.log('Found listing keys:', listingKeys);
       
-      // Load and combine all user listings
+      // Create a Set to track unique listing IDs
+      const seenIds = new Set<string>();
+      
+      // Load and combine all user listings, preventing duplicates
       const allListings = listingKeys.reduce((acc: Equipment[], key) => {
         try {
           const listings = JSON.parse(localStorage.getItem(key) || '[]');
           console.log(`Listings for ${key}:`, listings);
-          return [...acc, ...listings];
+          
+          // Only add listings that haven't been seen before
+          const uniqueListings = listings.filter((listing: Equipment) => {
+            if (seenIds.has(listing.id)) {
+              return false;
+            }
+            seenIds.add(listing.id);
+            return true;
+          });
+          
+          return [...acc, ...uniqueListings];
         } catch (error) {
           console.error('Error parsing listings:', error);
           return acc;

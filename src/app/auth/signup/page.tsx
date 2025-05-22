@@ -70,30 +70,30 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
           Create your account
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p className="mt-2 text-center text-sm text-gray-300">
           Already have an account?{' '}
-          <Link href="/auth/login" className="font-medium text-amber-600 hover:text-amber-500">
+          <Link href="/auth/login" className="font-medium text-yellow-400 hover:text-yellow-300">
             Sign in
           </Link>
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-gray-900 py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
+              <div className="bg-red-900 border border-red-700 text-red-100 px-4 py-3 rounded-md">
                 {error}
               </div>
             )}
 
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="block text-sm font-medium text-white">
                 Full Name
               </label>
               <div className="mt-1 relative">
@@ -104,7 +104,7 @@ export default function SignUp() {
                   required
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-700 bg-gray-800 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-400 focus:border-yellow-400 sm:text-sm"
                   placeholder="John Doe"
                 />
                 <User className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -112,7 +112,7 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-white">
                 Email address
               </label>
               <div className="mt-1 relative">
@@ -124,7 +124,7 @@ export default function SignUp() {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-700 bg-gray-800 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-400 focus:border-yellow-400 sm:text-sm"
                   placeholder="you@example.com"
                 />
                 <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -132,7 +132,7 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-white">
                 Password
               </label>
               <div className="mt-1 relative">
@@ -144,7 +144,7 @@ export default function SignUp() {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-700 bg-gray-800 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-400 focus:border-yellow-400 sm:text-sm"
                   placeholder="••••••••"
                 />
                 <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -152,7 +152,7 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-white">
                 Confirm Password
               </label>
               <div className="mt-1 relative">
@@ -164,7 +164,7 @@ export default function SignUp() {
                   required
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-700 bg-gray-800 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-400 focus:border-yellow-400 sm:text-sm"
                   placeholder="••••••••"
                 />
                 <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -174,7 +174,7 @@ export default function SignUp() {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-yellow-400 hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400"
               >
                 Sign up
               </button>

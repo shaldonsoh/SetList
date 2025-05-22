@@ -6,8 +6,6 @@ export interface Equipment {
   category: string
   location: string
   description: string
-  ownerId?: string
-  ownerName?: string
 }
 
 export const equipment: Equipment[] = [
@@ -65,4 +63,4 @@ export const equipment: Equipment[] = [
     location: 'Berkeley, CA',
     description: 'Professional LED panel with full RGB color mixing and effects.'
   }
-]; 
+] 

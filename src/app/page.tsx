@@ -21,8 +21,9 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react'
+import { type ReactNode } from 'react';
 
-export default function Home() {
+export default function Home(): ReactNode {
   const router = useRouter();
   const { setSelectedCategory } = useSearch();
   const { listings } = useListings();
