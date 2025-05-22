@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import SearchBar from '@/components/search/SearchBar';
-import FilterSection from '@/components/search/FilterSection';
 import EquipmentCard from '@/components/equipment/EquipmentCard';
 import { useSearch } from '@/context/SearchContext';
 
@@ -45,11 +44,6 @@ export default function EquipmentContent() {
             {/* Search Bar */}
             <div className="w-full max-w-4xl">
               <SearchBar />
-            </div>
-            
-            {/* Additional Filters */}
-            <div className="w-full max-w-4xl">
-              <FilterSection />
             </div>
           </div>
         </div>

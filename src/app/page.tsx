@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import EquipmentCard from '@/components/equipment/EquipmentCard'
 import SearchBar from '@/components/search/SearchBar'
-import FilterSection from '@/components/search/FilterSection'
 import { useSearch } from '@/context/SearchContext'
 import { useListings } from '@/context/ListingsContext'
 import { 
@@ -207,9 +206,8 @@ export default function Home(): ReactNode {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex flex-col items-center space-y-8">
               <h2 className="text-2xl font-bold text-gray-900">Find the Perfect Equipment</h2>
-              <div className="w-full max-w-3xl space-y-8">
+              <div className="w-full max-w-3xl">
                 <SearchBar />
-                <FilterSection />
               </div>
             </div>
           </div>

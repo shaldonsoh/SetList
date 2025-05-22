@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Search, ChevronDown, MapPin, SlidersHorizontal } from 'lucide-react';
 import { useSearch } from '@/context/SearchContext';
 import { useRouter } from 'next/navigation';
+import FilterSection from '@/components/search/FilterSection';
 
 const categories = [
   'All Categories',
@@ -90,7 +91,7 @@ export default function SearchBar() {
         </div>
       </div>
 
-      {/* Second Row: Location, Filters, and Search Button */}
+      {/* Second Row: Location and Search Button */}
       <div className="flex items-center gap-2">
         {/* Location Input */}
         <div className="relative flex-grow-0 sm:w-64">
@@ -124,6 +125,13 @@ export default function SearchBar() {
           </button>
         </div>
       </div>
+
+      {/* Filter Panel */}
+      {showFilters && (
+        <div className="mt-4 p-4 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+          <FilterSection />
+        </div>
+      )}
     </div>
   );
 } 
