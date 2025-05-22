@@ -40,7 +40,7 @@ export default function EquipmentContent() {
         {/* Search Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col items-center space-y-8">
-            <h1 className="text-3xl font-bold text-white text-center">Find Your Perfect Gear</h1>
+            <h1 className="text-3xl font-bold text-white text-center">Find gear for your next project!</h1>
             
             {/* Search Bar */}
             <div className="w-full max-w-4xl">

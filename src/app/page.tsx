@@ -145,7 +145,7 @@ export default function Home(): ReactNode {
                   <span className="block text-yellow-400 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Local Creators</span>
                 </h1>
                 <p className="mt-3 max-w-md mx-auto text-base text-gray-100 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl drop-shadow">
-                  Access professional film equipment at affordable rates. List your gear and earn when you're not shooting.
+                  Access film and production equipment at affordable rates. List your gear and earn when you're not shooting.
                 </p>
                 <div className="mt-10 flex justify-center gap-4">
                   <Link

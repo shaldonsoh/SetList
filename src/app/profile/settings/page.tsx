@@ -47,14 +47,18 @@ export default function ProfileSettingsPage() {
     e.preventDefault();
     
     // Save all user data to localStorage
-    localStorage.setItem('userName', formData.name);
-    localStorage.setItem('userEmail', formData.email);
-    localStorage.setItem('userPhone', formData.phone);
-    localStorage.setItem('userAddress', formData.address);
-    localStorage.setItem('userBio', formData.bio);
-
-    // Trigger a window storage event so other components (like Navbar) update
-    window.dispatchEvent(new Event('storage'));
+    Object.entries(formData).forEach(([key, value]) => {
+      const storageKey = `user${key.charAt(0).toUpperCase() + key.slice(1)}`;
+      localStorage.setItem(storageKey, value);
+      
+      // Trigger a storage event for each change
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: storageKey,
+        newValue: value,
+        oldValue: localStorage.getItem(storageKey),
+        storageArea: localStorage
+      }));
+    });
     
     // Show success message
     alert('Profile updated successfully!');
@@ -199,7 +203,7 @@ export default function ProfileSettingsPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
                 >
                   Save Changes
                 </button>

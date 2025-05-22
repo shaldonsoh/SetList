@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, ChevronDown, MapPin } from 'lucide-react';
+import { Search, ChevronDown, MapPin, SlidersHorizontal } from 'lucide-react';
 import { useSearch } from '@/context/SearchContext';
 import { useRouter } from 'next/navigation';
 
@@ -19,6 +19,7 @@ const categories = [
 export default function SearchBar() {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const {
     searchTerm,
     setSearchTerm,
@@ -89,8 +90,8 @@ export default function SearchBar() {
         </div>
       </div>
 
-      {/* Second Row: Location and Search Button */}
-      <div className="flex justify-between gap-2">
+      {/* Second Row: Location, Filters, and Search Button */}
+      <div className="flex items-center gap-2">
         {/* Location Input */}
         <div className="relative flex-grow-0 sm:w-64">
           <input
@@ -103,6 +104,15 @@ export default function SearchBar() {
           />
           <MapPin className="absolute left-4 top-4 h-6 w-6 text-gray-400" />
         </div>
+
+        {/* More Filters Button */}
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="h-14 px-6 text-white bg-gray-800 border border-gray-700 rounded-xl hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors flex items-center gap-2"
+        >
+          <SlidersHorizontal className="h-5 w-5" />
+          <span>More Filters</span>
+        </button>
 
         {/* Search Button */}
         <div className="flex-grow flex justify-end">
