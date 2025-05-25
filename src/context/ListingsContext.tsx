@@ -2,7 +2,8 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { Equipment } from '@/data/equipment';
+import { Equipment } from '@/types/equipment';
+import { equipment } from '@/data/equipment';
 
 interface ListingsContextType {
   listings: Equipment[];

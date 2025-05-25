@@ -14,6 +14,9 @@ interface EquipmentCardProps {
   location: string
   showActions?: boolean
   onDelete?: () => void
+  onEdit?: () => void
+  ownerId?: string
+  ownerName?: string
 }
 
 export default function EquipmentCard({ 
@@ -24,7 +27,10 @@ export default function EquipmentCard({
   category, 
   location,
   showActions,
-  onDelete 
+  onDelete,
+  onEdit,
+  ownerId,
+  ownerName
 }: EquipmentCardProps) {
   const { getEquipmentReviews } = useReviews();
   const reviews = getEquipmentReviews(id);
@@ -33,24 +39,47 @@ export default function EquipmentCard({
     : 0;
 
   return (
-    <div className="group relative bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-      <Link href={`/equipment/${id}`}>
-        <div className="aspect-square w-full overflow-hidden">
+    <div className="group relative bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col">
+      <Link href={`/equipment/${id}`} className="flex-1 flex flex-col">
+        <div className="aspect-square w-full relative">
           <Image
             src={image}
             alt={name}
-            width={300}
-            height={300}
-            className="h-full w-full object-cover object-center group-hover:opacity-75 transition-opacity"
+            fill
+            className="object-cover object-center group-hover:opacity-75 transition-opacity"
           />
         </div>
-        <div className="p-4">
-          <h3 className="text-lg font-medium text-white">{name}</h3>
+        <div className="p-4 flex-1 flex flex-col">
+          <h3 className="text-lg font-medium text-white line-clamp-1">{name}</h3>
           <p className="mt-1 text-sm text-yellow-400">{category}</p>
           <div className="mt-1 flex items-center text-sm text-gray-400">
-            <MapPin className="h-4 w-4 mr-1" />
-            <span>{location}</span>
+            <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+            <span className="line-clamp-1">{location}</span>
           </div>
+
+          {/* Owner Information */}
+          {ownerId && ownerName && (
+            <Link 
+              href={`/profile/${ownerId}`}
+              className="mt-1 flex items-center text-sm text-gray-400 hover:text-yellow-400 transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <svg 
+                className="h-4 w-4 mr-1 flex-shrink-0" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                />
+              </svg>
+              <span className="line-clamp-1">{ownerName}</span>
+            </Link>
+          )}
           
           {/* Rating Stars */}
           <div className="mt-2 flex items-center">
@@ -58,7 +87,7 @@ export default function EquipmentCard({
               {[...Array(5)].map((_, i) => (
                 <svg
                   key={i}
-                  className={`h-4 w-4 ${
+                  className={`h-4 w-4 flex-shrink-0 ${
                     i < Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-600'
                   }`}
                   fill="currentColor"
@@ -73,26 +102,39 @@ export default function EquipmentCard({
             </div>
           </div>
 
-          <div className="mt-2 flex items-center justify-between">
+          <div className="mt-auto pt-2 flex items-center justify-between">
             <p className="text-xl font-bold text-yellow-400">${price}</p>
             <p className="text-sm text-gray-400">/day</p>
           </div>
         </div>
       </Link>
       
-      {showActions && onDelete && (
+      {showActions && (
         <div className="absolute top-2 right-2 flex gap-2">
           <button
             onClick={(e) => {
               e.preventDefault();
-              onDelete();
+              onEdit?.();
             }}
-            className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            className="p-2 bg-gray-800 text-white rounded-full hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
           </button>
+          {onDelete && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onDelete();
+              }}
+              className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
       )}
     </div>

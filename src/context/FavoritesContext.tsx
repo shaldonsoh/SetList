@@ -1,7 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Equipment } from '@/data/equipment';
+import { Equipment } from '@/types/equipment';
+import { equipment } from '@/data/equipment';
 
 interface FavoritesContextType {
   favorites: string[];

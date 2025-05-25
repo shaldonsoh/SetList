@@ -1,14 +1,4 @@
-export interface Equipment {
-  id: string
-  name: string
-  price: number
-  image: string
-  category: string
-  location: string
-  description: string
-  ownerId?: string
-  ownerName?: string
-}
+import { Equipment } from '@/types/equipment';
 
 export const equipment: Equipment[] = [
   {
@@ -18,7 +8,12 @@ export const equipment: Equipment[] = [
     image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=300&h=300&auto=format&fit=crop',
     category: 'Cameras',
     location: 'San Francisco, CA',
-    description: 'Professional full-frame mirrorless camera with excellent low-light performance.'
+    description: 'Professional full-frame mirrorless camera with excellent low-light performance.',
+    deliveryOptions: {
+      pickup: true,
+      delivery: true,
+      shipping: false
+    }
   },
   {
     id: '2',
@@ -27,7 +22,12 @@ export const equipment: Equipment[] = [
     image: 'https://images.unsplash.com/photo-1495707902641-75cac588d2e9?q=80&w=300&h=300&auto=format&fit=crop',
     category: 'Lenses',
     location: 'San Francisco, CA',
-    description: 'Versatile professional zoom lens, perfect for events and portraits.'
+    description: 'Versatile professional zoom lens, perfect for events and portraits.',
+    deliveryOptions: {
+      pickup: true,
+      delivery: true,
+      shipping: true
+    }
   },
   {
     id: '3',
@@ -36,7 +36,12 @@ export const equipment: Equipment[] = [
     image: 'https://images.unsplash.com/photo-1589872337262-e695c8e41292?q=80&w=300&h=300&auto=format&fit=crop',
     category: 'Stabilizers',
     location: 'Oakland, CA',
-    description: 'Professional 3-axis gimbal stabilizer for DSLRs and mirrorless cameras.'
+    description: 'Professional 3-axis gimbal stabilizer for DSLRs and mirrorless cameras.',
+    deliveryOptions: {
+      pickup: true,
+      delivery: false,
+      shipping: false
+    }
   },
   {
     id: '4',
@@ -45,7 +50,12 @@ export const equipment: Equipment[] = [
     image: 'https://images.unsplash.com/photo-1542567455-cd733f23fbb1?q=80&w=300&h=300&auto=format&fit=crop',
     category: 'Lighting',
     location: 'San Jose, CA',
-    description: 'Professional battery-powered flash with TTL and HSS capabilities.'
+    description: 'Professional battery-powered flash with TTL and HSS capabilities.',
+    deliveryOptions: {
+      pickup: true,
+      delivery: true,
+      shipping: true
+    }
   },
   {
     id: '5',
@@ -54,7 +64,12 @@ export const equipment: Equipment[] = [
     image: 'https://images.unsplash.com/photo-1533702165324-66678e2069b2?q=80&w=300&h=300&auto=format&fit=crop',
     category: 'Cinema Cameras',
     location: 'San Francisco, CA',
-    description: 'Professional cinema camera with exceptional low-light performance.'
+    description: 'Professional cinema camera with exceptional low-light performance.',
+    deliveryOptions: {
+      pickup: true,
+      delivery: false,
+      shipping: false
+    }
   },
   {
     id: '6',
@@ -63,6 +78,11 @@ export const equipment: Equipment[] = [
     image: 'https://images.unsplash.com/photo-1595859703065-2c794f06b4c3?q=80&w=300&h=300&auto=format&fit=crop',
     category: 'Lighting',
     location: 'Berkeley, CA',
-    description: 'Professional LED panel with full RGB color mixing and effects.'
+    description: 'Professional LED panel with full RGB color mixing and effects.',
+    deliveryOptions: {
+      pickup: true,
+      delivery: true,
+      shipping: false
+    }
   }
 ]; 

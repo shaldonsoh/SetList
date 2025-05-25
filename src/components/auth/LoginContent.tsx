@@ -4,6 +4,17 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  location: string;
+  joinDate: string;
+  avatar: string;
+  bio: string;
+}
+
 export default function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,19 +40,50 @@ export default function LoginContent() {
     // For now, we'll just simulate a successful login/signup
     console.log('Form submitted:', { isLogin, formData });
     
-    // Generate a unique userId if signing up or use email as userId for login
-    const userId = formData.email;
-    localStorage.setItem('userId', userId);
+    // Get existing users
+    const allUsers = JSON.parse(localStorage.getItem('users') || '{}') as Record<string, UserData>;
+    let userId = '';
+    let userName = '';
+
+    // Find user by email
+    const userEntry = Object.entries(allUsers).find(([_, userData]) => userData.email === formData.email);
     
-    // Store the user's name and auth state in localStorage
-    if (!isLogin) {
-      localStorage.setItem('userName', formData.name);
+    if (userEntry) {
+      // User exists
+      userId = userEntry[0];
+      userName = userEntry[1].name;
     } else {
-      const existingName = localStorage.getItem('userName');
-      if (!existingName) {
-        localStorage.setItem('userName', 'John Doe');
+      // Create new user if signing up
+      if (!isLogin) {
+        userId = Date.now().toString();
+        const userData = {
+          id: userId,
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          location: '',
+          joinDate: new Date().toISOString(),
+          avatar: '/default-avatar.png',
+          bio: `${formData.name} is a member of our film gear lending community.`
+        };
+        
+        allUsers[userId] = userData;
+        localStorage.setItem('users', JSON.stringify(allUsers));
+        userName = formData.name;
+
+        // Initialize empty arrays for user's data
+        localStorage.setItem(`userListings_${userId}`, JSON.stringify([]));
+        localStorage.setItem(`userFavorites_${userId}`, JSON.stringify([]));
+        localStorage.setItem(`userReviews_${userId}`, JSON.stringify([]));
+      } else {
+        alert('User not found. Please sign up first.');
+        return;
       }
     }
+    
+    // Store the user's session data
+    localStorage.setItem('userId', userId);
+    localStorage.setItem('userName', userName);
     localStorage.setItem('isAuthenticated', 'true');
     
     // Trigger a storage event for other components to update

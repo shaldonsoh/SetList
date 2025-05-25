@@ -37,6 +37,10 @@ export default function MyListingsPage() {
     removeListing(listingId);
   };
 
+  const handleEdit = (listingId: string) => {
+    router.push(`/equipment/${listingId}/edit`);
+  };
+
   const filteredListings = selectedCategory === 'All Categories'
     ? listings
     : listings.filter(listing => listing.category === selectedCategory);
@@ -120,11 +124,12 @@ export default function MyListingsPage() {
                       id={listing.id}
                       name={listing.name}
                       price={listing.price}
-                      image={listing.image}
+                      image={listing.image || '/default-equipment-image.jpg'}
                       category={listing.category}
                       location={listing.location}
                       showActions={true}
                       onDelete={() => handleDelete(listing.id)}
+                      onEdit={() => handleEdit(listing.id)}
                     />
                   ))}
                 </div>

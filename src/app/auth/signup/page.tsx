@@ -45,13 +45,21 @@ export default function SignUp() {
         id: userId,
         name: formData.name,
         email: formData.email,
-        password: formData.password // In a real app, this should be hashed
+        password: formData.password, // In a real app, this should be hashed
+        location: '',
+        joinDate: new Date().toISOString(),
+        avatar: '/default-avatar.png',
+        bio: `${formData.name} is a member of our film gear lending community.`
       };
 
-      // Save user data
-      localStorage.setItem(`user_${userId}`, JSON.stringify(userData));
+      // Get existing users or initialize empty object
+      const allUsers = JSON.parse(localStorage.getItem('users') || '{}');
+      allUsers[userId] = userData;
       
-      // Save userId for current session
+      // Save all user data
+      localStorage.setItem('users', JSON.stringify(allUsers));
+      
+      // Save session data
       localStorage.setItem('userId', userId);
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('userName', formData.name);

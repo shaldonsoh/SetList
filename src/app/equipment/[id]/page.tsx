@@ -1,5 +1,6 @@
 'use client'
 
+import { Equipment } from '@/types/equipment'
 import { notFound, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -13,18 +14,6 @@ import { useRentals } from '@/context/RentalContext'
 import { useMessages } from '@/context/MessageContext'
 import ReviewCard from '@/components/reviews/ReviewCard'
 import Navbar from '@/components/Navbar'
-
-interface Equipment {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  location: string;
-  description: string;
-  ownerId?: string;
-  ownerName?: string;
-}
 
 interface Props {
   params: {
@@ -65,6 +54,24 @@ export default function EquipmentDetailPage({ params }: Props) {
   useEffect(() => {
     // Find the item in listings
     const foundItem = listings.find((e) => e.id === params.id);
+    
+    // Ensure owner information is loaded
+    if (foundItem) {
+      // If owner information is missing, try to find it in localStorage
+      if (!foundItem.ownerName && foundItem.ownerId) {
+        const userKey = `userListings_${foundItem.ownerId}`;
+        try {
+          const userListings = JSON.parse(localStorage.getItem(userKey) || '[]');
+          const matchingListing = userListings.find((l: Equipment) => l.id === params.id);
+          if (matchingListing && matchingListing.ownerName) {
+            foundItem.ownerName = matchingListing.ownerName;
+          }
+        } catch (error) {
+          console.error('Error loading owner information:', error);
+        }
+      }
+    }
+    
     setItem(foundItem || null);
     setIsLoading(false);
   }, [params.id, listings]);
@@ -107,6 +114,19 @@ export default function EquipmentDetailPage({ params }: Props) {
       router.push('/auth/login?returnTo=/equipment/' + params.id);
       return;
     }
+
+    // Check if user is the owner
+    if (item.ownerId === userId) {
+      alert('You cannot rent your own equipment');
+      return;
+    }
+
+    // Check if owner information is available
+    if (!item.ownerId || !item.ownerName) {
+      alert('Owner information is not available');
+      return;
+    }
+
     setShowRentalModal(true);
   };
 
@@ -118,6 +138,12 @@ export default function EquipmentDetailPage({ params }: Props) {
     
     if (!item.ownerId || !item.ownerName) {
       alert('Owner information is not available');
+      return;
+    }
+
+    // Check if user is the owner
+    if (item.ownerId === userId) {
+      alert('This is your own equipment listing');
       return;
     }
     
@@ -138,6 +164,12 @@ export default function EquipmentDetailPage({ params }: Props) {
     if (!userId || !userName) return;
     if (!item.ownerId || !item.ownerName) {
       alert('Owner information is not available');
+      return;
+    }
+
+    // Check if user is the owner
+    if (item.ownerId === userId) {
+      alert('You cannot rent your own equipment');
       return;
     }
 
@@ -184,7 +216,7 @@ export default function EquipmentDetailPage({ params }: Props) {
             <div className="flex flex-col">
               <div className="aspect-[4/3] relative overflow-hidden rounded-lg bg-gray-100">
                 <Image
-                  src={item.image}
+                  src={item.image || '/default-equipment-image.jpg'}
                   alt={item.name}
                   fill
                   className="object-cover object-center"
@@ -251,24 +283,89 @@ export default function EquipmentDetailPage({ params }: Props) {
                 {item.location}
               </div>
 
+              {/* Owner Information */}
+              <div className="mt-4 flex items-center text-gray-600">
+                <svg
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                {item.ownerName ? (
+                  <Link 
+                    href={`/profile/${item.ownerId}`}
+                    className="text-gray-600 hover:text-yellow-400 transition-colors"
+                  >
+                    Listed by {item.ownerName}
+                  </Link>
+                ) : (
+                  'Owner information not available'
+                )}
+              </div>
+
               <p className="mt-6 text-gray-600 leading-relaxed">
                 {item.description}
               </p>
 
               {/* Action Buttons */}
               <div className="mt-8 space-y-4 sm:space-y-0 sm:space-x-4 sm:flex">
-                <button 
-                  onClick={handleRentalRequest}
-                  className="w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-900 md:py-4 md:text-lg md:px-10"
-                >
-                  Request to Rent
-                </button>
-                <button 
-                  onClick={handleContactOwner}
-                  className="w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
-                >
-                  Contact Owner
-                </button>
+                {item.ownerId === userId ? (
+                  <>
+                    <Link 
+                      href={`/equipment/${item.id}/edit`}
+                      className="w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-900 md:py-4 md:text-lg md:px-10"
+                    >
+                      Edit Listing
+                    </Link>
+                    <button 
+                      onClick={() => router.push('/listings')}
+                      className="w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
+                    >
+                      View All Listings
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {isAuthenticated ? (
+                      <>
+                        <button 
+                          onClick={handleRentalRequest}
+                          disabled={item.ownerId === userId}
+                          className={`w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white ${
+                            item.ownerId === userId 
+                              ? 'bg-gray-400 cursor-not-allowed' 
+                              : 'bg-black hover:bg-gray-900'
+                          } md:py-4 md:text-lg md:px-10`}
+                        >
+                          {item.ownerId === userId ? 'Cannot Rent Own Equipment' : 'Request to Rent'}
+                        </button>
+                        <button 
+                          onClick={handleContactOwner}
+                          disabled={item.ownerId === userId}
+                          className={`w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-gray-300 text-base font-medium rounded-md ${
+                            item.ownerId === userId 
+                              ? 'text-gray-400 bg-gray-100 cursor-not-allowed' 
+                              : 'text-gray-700 bg-white hover:bg-gray-50'
+                          } md:py-4 md:text-lg md:px-10`}
+                        >
+                          {item.ownerId === userId ? 'Your Listing' : 'Contact Owner'}
+                        </button>
+                      </>
+                    ) : (
+                      <button 
+                        onClick={() => router.push('/auth/login?returnTo=/equipment/' + params.id)}
+                        className="w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-900 md:py-4 md:text-lg md:px-10"
+                      >
+                        Login to Rent
+                      </button>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>

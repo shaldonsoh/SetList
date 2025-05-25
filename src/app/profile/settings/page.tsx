@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, Mail, Phone, MapPin, ArrowLeft } from 'lucide-react';
+import Image from 'next/image';
+import ImageUpload from '@/components/ImageUpload';
 
 export default function ProfileSettingsPage() {
   const router = useRouter();
@@ -12,30 +14,35 @@ export default function ProfileSettingsPage() {
     name: '',
     email: '',
     phone: '',
-    address: '',
-    bio: ''
+    location: '',
+    bio: '',
+    avatar: ''
   });
 
   useEffect(() => {
     const authStatus = localStorage.getItem('isAuthenticated') === 'true';
-    const storedName = localStorage.getItem('userName');
-    const storedEmail = localStorage.getItem('userEmail');
-    const storedPhone = localStorage.getItem('userPhone');
-    const storedAddress = localStorage.getItem('userAddress');
-    const storedBio = localStorage.getItem('userBio');
+    const userId = localStorage.getItem('userId');
     
-    setIsAuthenticated(authStatus);
-    setUserName(storedName || '');
-    setFormData({
-      name: storedName || '',
-      email: storedEmail || '',
-      phone: storedPhone || '',
-      address: storedAddress || '',
-      bio: storedBio || ''
-    });
-    
-    if (!authStatus) {
+    if (!authStatus || !userId) {
       router.push('/auth/login?returnTo=/profile/settings');
+      return;
+    }
+
+    // Load user data from users object in localStorage
+    const allUsers = JSON.parse(localStorage.getItem('users') || '{}');
+    const userData = allUsers[userId];
+    
+    if (userData) {
+      setIsAuthenticated(authStatus);
+      setUserName(userData.name || '');
+      setFormData({
+        name: userData.name || '',
+        email: userData.email || '',
+        phone: userData.phone || '',
+        location: userData.location || '',
+        bio: userData.bio || '',
+        avatar: userData.avatar || '/default-avatar.png'
+      });
     }
   }, [router]);
 
@@ -46,19 +53,21 @@ export default function ProfileSettingsPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Save all user data to localStorage
-    Object.entries(formData).forEach(([key, value]) => {
-      const storageKey = `user${key.charAt(0).toUpperCase() + key.slice(1)}`;
-      localStorage.setItem(storageKey, value);
-      
-      // Trigger a storage event for each change
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: storageKey,
-        newValue: value,
-        oldValue: localStorage.getItem(storageKey),
-        storageArea: localStorage
-      }));
-    });
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    // Get all users and update the specific user's data
+    const allUsers = JSON.parse(localStorage.getItem('users') || '{}');
+    allUsers[userId] = {
+      ...allUsers[userId],
+      ...formData
+    };
+    
+    // Save updated users data
+    localStorage.setItem('users', JSON.stringify(allUsers));
+    
+    // Update current session data
+    localStorage.setItem('userName', formData.name);
     
     // Show success message
     alert('Profile updated successfully!');
@@ -96,6 +105,29 @@ export default function ProfileSettingsPage() {
         <div className="bg-white rounded-lg shadow">
           <div className="p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Profile Picture */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Profile Picture
+                </label>
+                <div className="flex items-center space-x-6">
+                  <div className="relative w-20 h-20 rounded-full overflow-hidden">
+                    <Image
+                      src={formData.avatar || '/default-avatar.png'}
+                      alt={formData.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <ImageUpload
+                      value={formData.avatar}
+                      onChange={(value) => setFormData(prev => ({ ...prev, avatar: value }))}
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                   Full Name
@@ -157,8 +189,8 @@ export default function ProfileSettingsPage() {
               </div>
 
               <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                  Address
+                <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+                  Location
                 </label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -166,12 +198,12 @@ export default function ProfileSettingsPage() {
                   </div>
                   <input
                     type="text"
-                    name="address"
-                    id="address"
-                    value={formData.address}
+                    name="location"
+                    id="location"
+                    value={formData.location}
                     onChange={handleInputChange}
                     className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
-                    placeholder="123 Main St, City, State"
+                    placeholder="City, Country"
                   />
                 </div>
               </div>

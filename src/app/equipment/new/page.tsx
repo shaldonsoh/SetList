@@ -96,7 +96,8 @@ export default function ListGear() {
         price: formData.dailyRate,
         location: formData.location,
         image: images[0] || 'https://images.unsplash.com/photo-1589872307379-0ffdf9829123', // Use first image or default
-        ownerId: userId
+        ownerId: userId,
+        ownerName: localStorage.getItem('userName') || 'Unknown User'
       };
 
       console.log('Creating new listing:', newListing);

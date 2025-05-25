@@ -128,7 +128,7 @@ export default function SearchBar() {
 
       {/* Filter Panel */}
       {showFilters && (
-        <div className="mt-4 p-4 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+        <div className="mt-4">
           <FilterSection />
         </div>
       )}

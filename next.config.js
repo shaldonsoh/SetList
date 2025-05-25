@@ -12,7 +12,7 @@ const nextConfig = {
         hostname: '**',  // Allow all HTTPS domains temporarily for development
       }
     ]
-  },
+  }
 }
 
 module.exports = nextConfig 

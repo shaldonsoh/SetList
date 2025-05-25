@@ -239,7 +239,7 @@ export default function Home(): ReactNode {
                           id={item.id}
                           name={item.name}
                           price={item.price}
-                          image={item.image}
+                          image={item.image || '/default-equipment-image.jpg'}
                           category={item.category}
                           location={item.location}
                         />
