@@ -39,40 +39,28 @@ export default function SignUp() {
     }
 
     try {
-      // Store user data in localStorage
-      const userId = Date.now().toString();
-      const userData = {
-        id: userId,
-        name: formData.name,
-        email: formData.email,
-        password: formData.password, // In a real app, this should be hashed
-        location: '',
-        joinDate: new Date().toISOString(),
-        avatar: '/default-avatar.png',
-        bio: `${formData.name} is a member of our film gear lending community.`
-      };
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      // Get existing users or initialize empty object
-      const allUsers = JSON.parse(localStorage.getItem('users') || '{}');
-      allUsers[userId] = userData;
-      
-      // Save all user data
-      localStorage.setItem('users', JSON.stringify(allUsers));
-      
-      // Save session data
-      localStorage.setItem('userId', userId);
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('userName', formData.name);
+      const data = await response.json();
 
-      // Initialize empty arrays for user's data
-      localStorage.setItem(`userListings_${userId}`, JSON.stringify([]));
-      localStorage.setItem(`userFavorites_${userId}`, JSON.stringify([]));
-      localStorage.setItem(`userReviews_${userId}`, JSON.stringify([]));
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create account');
+      }
 
-      // Redirect to home page
-      router.push('/');
+      // Redirect to login page after successful signup
+      router.push('/auth/login');
     } catch (err) {
-      setError('An error occurred during registration');
+      setError(err instanceof Error ? err.message : 'An error occurred during registration');
       console.error('Registration error:', err);
     }
   };
