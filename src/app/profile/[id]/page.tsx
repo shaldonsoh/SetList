@@ -38,67 +38,69 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
   const [averageRating, setAverageRating] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    // Check if this is the current user's profile
-    const currentUserId = localStorage.getItem('userId');
-    setIsCurrentUser(currentUserId === params.id);
+    const loadProfile = async () => {
+      try {
+        // Check if this is the current user's profile
+        const currentUserId = localStorage.getItem('userId');
+        setIsCurrentUser(currentUserId === params.id);
 
-    // Load user profile from localStorage
-    try {
-      // First try to load from users
-      const allUsers = JSON.parse(localStorage.getItem('users') || '{}');
-      let userProfile = allUsers[params.id];
-      
-      // If not found in users, try to load from userListings
-      if (!userProfile) {
-        const userListingsKey = `userListings_${params.id}`;
-        const userListings = JSON.parse(localStorage.getItem(userListingsKey) || '[]');
-        if (userListings.length > 0) {
-          // Get user info from their listings
-          const firstListing = userListings[0];
-          userProfile = {
-            name: firstListing.ownerName,
-            location: firstListing.location,
-            joinDate: localStorage.getItem(`userJoinDate_${params.id}`) || new Date().toISOString(),
-          };
-          
-          // Store this user info back in users for future use
-          allUsers[params.id] = userProfile;
-          localStorage.setItem('users', JSON.stringify(allUsers));
+        // Fetch user profile from API
+        const response = await fetch(`/api/auth/user?id=${params.id}`);
+        if (!response.ok) {
+          throw new Error('Failed to load user profile');
         }
-      }
-      
-      if (userProfile) {
+
+        const userData = await response.json();
+        
         setProfile({
-          id: params.id,
-          name: userProfile.name || 'Unknown User',
-          location: userProfile.location || 'Location not specified',
-          joinDate: userProfile.joinDate || new Date().toISOString(),
-          avatar: userProfile.avatar || '/default-avatar.png',
-          bio: userProfile.bio || `${userProfile.name} is a member of our film gear lending community.`
+          id: userData.id,
+          name: userData.name || 'Unknown User',
+          location: userData.location || 'Location not specified',
+          joinDate: userData.createdAt,
+          avatar: userData.image || '/default-avatar.png',
+          bio: userData.bio || `${userData.name} is a member of our film gear lending community.`
         });
+
+        // Get user's listings
+        const userListings = listings.filter(listing => listing.ownerId === params.id);
+        setUserListings(userListings);
+
+        // Calculate average rating across all listings
+        let totalRating = 0;
+        let reviewCount = 0;
+        userListings.forEach((listing: Equipment) => {
+          const reviews = getEquipmentReviews(listing.id);
+          reviewCount += reviews.length;
+          totalRating += reviews.reduce((acc: number, review: Review) => acc + review.rating, 0);
+        });
+
+        setTotalReviews(reviewCount);
+        setAverageRating(reviewCount > 0 ? totalRating / reviewCount : 0);
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        setError('Failed to load user profile');
       }
-    } catch (error) {
-      console.error('Error loading user profile:', error);
-    }
+    };
 
-    // Get user's listings
-    const userListings = listings.filter(listing => listing.ownerId === params.id);
-    setUserListings(userListings);
-
-    // Calculate average rating across all listings
-    let totalRating = 0;
-    let reviewCount = 0;
-    userListings.forEach((listing: Equipment) => {
-      const reviews = getEquipmentReviews(listing.id);
-      reviewCount += reviews.length;
-      totalRating += reviews.reduce((acc: number, review: Review) => acc + review.rating, 0);
-    });
-
-    setTotalReviews(reviewCount);
-    setAverageRating(reviewCount > 0 ? totalRating / reviewCount : 0);
+    loadProfile();
   }, [params.id, listings, getEquipmentReviews]);
+
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <main className="min-h-screen pt-20 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900">Error</h1>
+            <p className="mt-2 text-gray-600">{error}</p>
+          </div>
+        </main>
+      </>
+    );
+  }
 
   if (!profile) {
     return (

@@ -52,11 +52,20 @@ export async function POST(request: Request) {
       );
     }
 
+    // Validate price
+    const price = typeof body.price === 'string' ? parseFloat(body.price) : body.price;
+    if (isNaN(price)) {
+      return NextResponse.json(
+        { error: 'Invalid price value' },
+        { status: 400 }
+      );
+    }
+
     const equipment = await prisma.equipment.create({
       data: {
         name: body.name,
         description: body.description,
-        price: body.price,
+        price: price, // Use the validated price
         category: body.category,
         location: body.location,
         image: body.image,

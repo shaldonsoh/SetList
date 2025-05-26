@@ -3,7 +3,8 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(request: Request) {
   try {
-    const userId = request.headers.get('X-User-Id');
+    // Get user ID from header or URL query parameter
+    const userId = request.headers.get('X-User-Id') || new URL(request.url).searchParams.get('id');
 
     if (!userId) {
       return NextResponse.json(

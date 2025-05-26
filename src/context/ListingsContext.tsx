@@ -37,16 +37,25 @@ export function ListingsProvider({ children }: { children: ReactNode }) {
       const userId = localStorage.getItem('userId');
       if (!userId) throw new Error('User not authenticated');
 
+      // Ensure price is a number
+      const listingData = {
+        ...listing,
+        price: typeof listing.price === 'string' ? parseFloat(listing.price) : listing.price
+      };
+
       const response = await fetch('/api/equipment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-User-Id': userId
         },
-        body: JSON.stringify(listing)
+        body: JSON.stringify(listingData)
       });
 
-      if (!response.ok) throw new Error('Failed to add listing');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to add listing');
+      }
       
       const newListing = await response.json();
       setListings(prev => [...prev, newListing]);
