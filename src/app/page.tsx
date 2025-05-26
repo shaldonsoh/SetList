@@ -138,26 +138,26 @@ export default function Home(): ReactNode {
           {/* Hero Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div className="pt-32 pb-20">
-              <div className="text-center">
+          <div className="text-center">
                 <h1 className="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl drop-shadow-lg">
                   <span className="block">Rent Film Gear from</span>
                   <span className="block text-yellow-400 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Local Creators</span>
-                </h1>
+            </h1>
                 <p className="mt-3 max-w-md mx-auto text-base text-gray-100 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl drop-shadow">
                   Access film and production equipment at affordable rates. List your gear and earn when you're not shooting.
-                </p>
+            </p>
                 <div className="mt-10 flex justify-center gap-4">
-                  <Link
-                    href="/equipment"
+                <Link
+                  href="/equipment"
                     className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-black bg-yellow-400 hover:bg-yellow-500 md:py-4 md:text-lg md:px-10 transition-colors"
-                  >
-                    Browse Equipment
-                  </Link>
-                  <Link
-                    href="/equipment/new"
+                >
+                  Browse Equipment
+                </Link>
+                <Link
+                  href="/equipment/new"
                     className="inline-flex items-center px-8 py-3 border border-yellow-400 text-base font-medium rounded-md text-yellow-400 bg-transparent hover:bg-yellow-400 hover:text-black md:py-4 md:text-lg md:px-10 transition-colors"
-                  >
-                    List Your Gear
+                >
+                  List Your Gear
                   </Link>
                 </div>
               </div>
@@ -218,13 +218,13 @@ export default function Home(): ReactNode {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold text-gray-900">Featured Equipment</h2>
-              <Link
-                href="/equipment"
+            <Link
+              href="/equipment"
                 className="text-yellow-400 hover:text-yellow-500 font-medium"
-              >
+            >
                 View All
-              </Link>
-            </div>
+            </Link>
+          </div>
             {/* Carousel Container */}
             <div className="relative">
               <div 
@@ -235,14 +235,14 @@ export default function Home(): ReactNode {
                   {featuredEquipment && featuredEquipment.length > 0 ? (
                     featuredEquipment.map((item) => (
                       <div key={item.id} className="w-[170px] md:w-[352px] flex-[0_0_auto]">
-                        <EquipmentCard
-                          id={item.id}
-                          name={item.name}
-                          price={item.price}
+              <EquipmentCard
+                id={item.id}
+                name={item.name}
+                price={item.price}
                           image={item.image || '/default-equipment-image.jpg'}
-                          category={item.category}
-                          location={item.location}
-                        />
+                category={item.category}
+                location={item.location}
+              />
                       </div>
                     ))
                   ) : (
@@ -257,8 +257,8 @@ export default function Home(): ReactNode {
                     </div>
                   )}
                 </div>
-              </div>
-              
+          </div>
+
               {/* Only show arrows if there are listings */}
               {featuredEquipment && featuredEquipment.length > 0 && (
                 <>
