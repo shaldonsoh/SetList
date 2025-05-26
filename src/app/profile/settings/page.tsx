@@ -9,7 +9,6 @@ import Navbar from '@/components/Navbar';
 export default function ProfileSettingsPage() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userName, setUserName] = useState('');
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
@@ -21,60 +20,72 @@ export default function ProfileSettingsPage() {
   });
 
   useEffect(() => {
-    try {
-      const authStatus = localStorage.getItem('isAuthenticated') === 'true';
-      const userId = localStorage.getItem('userId');
-      
-      if (!authStatus || !userId) {
-        router.push('/auth/login?returnTo=/profile/settings');
-        return;
-      }
+    const loadUserData = async () => {
+      try {
+        const authStatus = localStorage.getItem('isAuthenticated') === 'true';
+        const userId = localStorage.getItem('userId');
+        
+        if (!authStatus || !userId) {
+          router.push('/auth/login?returnTo=/profile/settings');
+          return;
+        }
 
-      // Load user data from users object in localStorage
-      const allUsers = JSON.parse(localStorage.getItem('users') || '{}');
-      const userData = allUsers[userId];
-      
-      if (userData) {
         setIsAuthenticated(authStatus);
-        setUserName(userData.name || '');
+
+        // Fetch user data from API
+        const response = await fetch('/api/auth/user', {
+          headers: {
+            'X-User-Id': userId
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const userData = await response.json();
+        
         setFormData({
           name: userData.name || '',
           email: userData.email || '',
           phone: userData.phone || '',
           location: userData.location || '',
           bio: userData.bio || '',
-          avatar: userData.avatar || '/default-avatar.png'
+          avatar: userData.image || '/default-avatar.png'
         });
+      } catch (err) {
+        setError('Error loading profile data');
+        console.error('Error loading profile:', err);
       }
-    } catch (err) {
-      setError('Error loading profile data');
-      console.error('Error loading profile:', err);
-    }
+    };
+
+    loadUserData();
   }, [router]);
 
-  if (!isAuthenticated) {
-    return null;
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
       const userId = localStorage.getItem('userId');
       if (!userId) return;
 
-      // Get all users and update the specific user's data
-      const allUsers = JSON.parse(localStorage.getItem('users') || '{}');
-      allUsers[userId] = {
-        ...allUsers[userId],
-        ...formData
-      };
+      const response = await fetch('/api/auth/user', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Id': userId
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      const updatedUser = await response.json();
       
-      // Save updated users data
-      localStorage.setItem('users', JSON.stringify(allUsers));
-      
-      // Update current session data
-      localStorage.setItem('userName', formData.name);
+      // Update session data
+      localStorage.setItem('userName', updatedUser.name);
       
       // Show success message
       alert('Profile updated successfully!');
@@ -128,6 +139,10 @@ export default function ProfileSettingsPage() {
     };
     reader.readAsDataURL(file);
   };
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <>
