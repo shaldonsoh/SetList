@@ -39,7 +39,8 @@ export default function SignUp() {
     }
 
     try {
-      const response = await fetch('/api/auth/signup', {
+      // Sign up
+      const signupResponse = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,14 +52,37 @@ export default function SignUp() {
         }),
       });
 
-      const data = await response.json();
+      const signupData = await signupResponse.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create account');
+      if (!signupResponse.ok) {
+        throw new Error(signupData.error || 'Failed to create account');
       }
 
-      // Redirect to login page after successful signup
-      router.push('/auth/login');
+      // Automatically log in
+      const loginResponse = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const loginData = await loginResponse.json();
+
+      if (!loginResponse.ok) {
+        throw new Error(loginData.error || 'Failed to log in');
+      }
+
+      // Store user session data
+      localStorage.setItem('userId', loginData.id);
+      localStorage.setItem('userName', loginData.name);
+      localStorage.setItem('isAuthenticated', 'true');
+
+      // Redirect to home page
+      router.push('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred during registration');
       console.error('Registration error:', err);
