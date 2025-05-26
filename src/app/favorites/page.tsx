@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Heart, ChevronLeft } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { useFavorites } from '@/context/FavoritesContext';
 import { equipment } from '@/data/equipment';
 import EquipmentCard from '@/components/equipment/EquipmentCard';
 import Navbar from '@/components/Navbar';
-import Link from 'next/link';
 
 export default function FavoritesPage() {
   const router = useRouter();
@@ -35,14 +34,7 @@ export default function FavoritesPage() {
       <Navbar />
       <div className="min-h-screen pt-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-8">
-            <Link 
-              href="/"
-              className="flex items-center text-gray-600 hover:text-gray-900"
-            >
-              <ChevronLeft className="h-5 w-5" />
-              <span>Back to Home</span>
-            </Link>
+          <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900">Saved Items</h1>
           </div>
           
