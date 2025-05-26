@@ -78,6 +78,8 @@ export default function EquipmentContent() {
                 image={item.image || '/default-equipment-image.jpg'}
                 category={item.category}
                 location={item.location}
+                ownerId={item.ownerId}
+                ownerName={item.ownerName}
               />
             ))}
           </div>

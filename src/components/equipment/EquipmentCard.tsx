@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { MapPin } from 'lucide-react'
@@ -30,13 +31,37 @@ export default function EquipmentCard({
   onDelete,
   onEdit,
   ownerId,
-  ownerName
+  ownerName: initialOwnerName
 }: EquipmentCardProps) {
   const { getEquipmentReviews } = useReviews();
+  const [ownerName, setOwnerName] = useState(initialOwnerName);
   const reviews = getEquipmentReviews(id);
   const averageRating = reviews.length > 0
     ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
     : 0;
+
+  useEffect(() => {
+    const fetchOwnerInfo = async () => {
+      if (!ownerId) return;
+      
+      try {
+        const response = await fetch('/api/auth/user', {
+          headers: {
+            'X-User-Id': ownerId
+          }
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setOwnerName(userData.name);
+        }
+      } catch (error) {
+        console.error('Error fetching owner info:', error);
+      }
+    };
+
+    fetchOwnerInfo();
+  }, [ownerId]);
 
   return (
     <div className="group relative bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col">

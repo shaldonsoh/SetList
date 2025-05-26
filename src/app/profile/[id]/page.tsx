@@ -201,6 +201,8 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
                     category={listing.category}
                     location={listing.location}
                     showActions={false}
+                    ownerId={listing.ownerId}
+                    ownerName={listing.ownerName}
                   />
                 ))}
               </div>
