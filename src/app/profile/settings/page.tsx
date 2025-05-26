@@ -99,6 +99,36 @@ export default function ProfileSettingsPage() {
     }));
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload an image file');
+      return;
+    }
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image size should be less than 5MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData(prev => ({
+        ...prev,
+        avatar: reader.result as string
+      }));
+      setError(''); // Clear any previous errors
+    };
+    reader.onerror = () => {
+      setError('Error reading file');
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <>
       <Navbar />
@@ -130,7 +160,7 @@ export default function ProfileSettingsPage() {
                     Profile Picture
                   </label>
                   <div className="flex items-center space-x-6">
-                    <div className="relative w-20 h-20 rounded-full overflow-hidden">
+                    <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-100">
                       <Image
                         src={formData.avatar || '/default-avatar.png'}
                         alt={formData.name}
@@ -139,16 +169,23 @@ export default function ProfileSettingsPage() {
                       />
                     </div>
                     <div className="flex-1">
+                      <label
+                        htmlFor="photo-upload"
+                        className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+                      >
+                        <Upload className="h-5 w-5 mr-2 text-gray-400" />
+                        Upload Photo
+                      </label>
                       <input
-                        type="text"
-                        name="avatar"
-                        value={formData.avatar}
-                        onChange={handleInputChange}
-                        className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
-                        placeholder="Enter image URL"
+                        id="photo-upload"
+                        name="photo"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileUpload}
+                        className="sr-only"
                       />
-                      <p className="mt-1 text-sm text-gray-500">
-                        Enter a URL for your profile picture
+                      <p className="mt-2 text-sm text-gray-500">
+                        JPG, PNG or GIF (max. 5MB)
                       </p>
                     </div>
                   </div>
