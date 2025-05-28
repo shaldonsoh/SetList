@@ -97,7 +97,7 @@ export default function LoginContent() {
     <div className="min-h-screen bg-black flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link href="/" className="flex justify-center">
-          <span className="text-2xl font-bold text-white">Set<span className="text-yellow-400">List</span></span>
+          <span className="text-2xl font-bold text-white">Crew<span className="text-yellow-400">Mate</span></span>
         </Link>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
           {isLogin ? 'Sign in to your account' : 'Create your account'}

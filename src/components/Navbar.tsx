@@ -74,8 +74,8 @@ export default function Navbar() {
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="flex items-center space-x-4">
                 <h1 className="text-2xl font-bold">
-                  <span className="text-black">Set</span>
-                  <span className="text-yellow-400">List</span>
+                  <span className="text-black">Crew</span>
+                  <span className="text-yellow-400">Mate</span>
                 </h1>
                 <span className="hidden md:inline text-sm text-black/80 border-l border-gray-300 pl-4">
                   Australia's 1st P2P lending platform for the Film Industry

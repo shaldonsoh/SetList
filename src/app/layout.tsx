@@ -15,8 +15,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Film Gear P2P",
-  description: "Rent and lend film gear",
+  title: "CrewMate",
+  description: "Australia's 1st P2P lending platform for the Film Industry",
 }
 
 export default function RootLayout({
