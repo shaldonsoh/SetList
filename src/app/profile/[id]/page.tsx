@@ -39,6 +39,7 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
   const [totalReviews, setTotalReviews] = useState(0);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -82,6 +83,8 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
       } catch (error) {
         console.error('Error loading profile:', error);
         setError('Failed to load user profile');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -97,6 +100,17 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
             <h1 className="text-2xl font-bold text-gray-900">Error</h1>
             <p className="mt-2 text-gray-600">{error}</p>
           </div>
+        </main>
+      </>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <Navbar />
+        <main className="min-h-screen pt-20 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
         </main>
       </>
     );
